@@ -39,7 +39,7 @@ resource "aws_elastic_beanstalk_application" "eb_app" {
 }
 
 module "app" {
-  source      = "github.com/BasileTrujillo/terraform-elastic-beanstalk-nodejs//eb-env"
+  source      = "/eb-env"
   aws_region  = "${var.aws_region}"
 
   # Application settings
@@ -67,7 +67,7 @@ module "app" {
 ## CloudFront
 ##################################################
 module "app_cdn" {
-  source              = "github.com/BasileTrujillo/terraform-elastic-beanstalk-nodejs//cloudfront"
+  source              = "/cloudfront"
 
   service_name        = "${var.service_name}"
   env                 = "${var.env}"
@@ -79,7 +79,7 @@ module "app_cdn" {
 ## Route53
 ##################################################
 module "app_dns" {
-  source      = "github.com/BasileTrujillo/terraform-elastic-beanstalk-nodejs//r53-alias"
+  source      = "/r53-alias"
   aws_region  = "${var.aws_region}"
 
   domain              = "example.io"

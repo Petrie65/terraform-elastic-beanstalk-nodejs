@@ -90,64 +90,6 @@ module "app_dns" {
 }
 ``` 
 
-### Add an Elastic File System to your EB
-
-* First, create the EFS before the Elastic Beanstalk Environment:
-```hcl
-##################################################
-## AWS Elastic File System
-##################################################
-resource "aws_efs_file_system" "file_storage" {
-  creation_token = "${var.service_name}-${var.env}"
-
-  tags {
-    Name = "${var.service_name}-${var.env}"
-  }
-}
-
-resource "aws_efs_mount_target" "file_storage_target" {
-  file_system_id  = "${aws_efs_file_system.file_storage.id}"
-  subnet_id       = "${var.vpc_subnets}"
-  security_groups = ["${var.security_groups}"]
-}
-```
-
-* Then set `efs_id` & `efs_mount_directory` to the Elastic Beanstalk Environment module:
-```hcl
-##################################################
-## Elastic Beanstalk config
-##################################################
-module "eb_env" {
-   source       = "github.com/BasileTrujillo/terraform-elastic-beanstalk-nodejs//eb-env"
-    aws_region  = "${var.aws_region}"
-  
-    # Application settings
-    service_name          = "nodejs-app-test"
-    service_description   = "My awesome nodeJs App"
-    env                   = "dev"
-  
-    # Instance settings
-    instance_type = "t2.micro"
-    min_instance  = "2"
-    max_instance  = "4"
-  
-    # ELB
-    enable_https  = "false" # If set to true, you will need to add an ssl_certificate_id (see L70 in app/variables.tf)
-  
-    # Security
-    vpc_id            = "vpc-xxxxxxx"
-    vpc_subnets       = "subnet-xxxxxxx"
-    elb_subnets       = "subnet-xxxxxxx"
-    security_groups   = "sg-xxxxxxx"
-  
-    # EFS
-    efs_id                = "${aws_efs_file_system.file_storage.id}"
-    efs_mount_directory   = "/var/app/efs"
-}
-```
-
-* Finally, copy `.ebextensions/efs_mount.config` to your `.ebextensions` project directory and deploy using AWS EB CLI
-
 ### Example
 
 * Take a look at [example.tf](./example.tf) for an example with Elastic Beanstalk and Route53.
