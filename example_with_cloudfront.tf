@@ -1,33 +1,9 @@
 ##################################################
-## Your variables
-##################################################
-variable "aws_region" {
-  type        = "string"
-  description = "The AWS Region"
-  default     = "eu-west-1"
-}
-variable "service_name" {
-  type    = "string"
-  default = "nodejs-app-test"
-}
-variable "service_description" {
-  type    = "string"
-  default = "My awesome nodeJs App"
-}
-variable "env" {
-  type    = "string"
-  default = "dev"
-}
-variable "domain_name" {
-  type    = "string"
-  default = "app-test.example.io"
-}
-
-##################################################
 ## AWS
 ##################################################
 provider "aws" {
   region = "${var.aws_region}"
+  version = "~> 2.58"
 }
 
 ##################################################
@@ -39,7 +15,7 @@ resource "aws_elastic_beanstalk_application" "eb_app" {
 }
 
 module "app" {
-  source      = "/eb-env"
+  source      = ".//eb-env"
   aws_region  = "${var.aws_region}"
 
   # Application settings
@@ -67,7 +43,7 @@ module "app" {
 ## CloudFront
 ##################################################
 module "app_cdn" {
-  source              = "/cloudfront"
+  source              = ".//cloudfront"
 
   service_name        = "${var.service_name}"
   env                 = "${var.env}"
@@ -79,7 +55,7 @@ module "app_cdn" {
 ## Route53
 ##################################################
 module "app_dns" {
-  source      = "/r53-alias"
+  source      = ".//r53-alias"
   aws_region  = "${var.aws_region}"
 
   domain              = "example.io"

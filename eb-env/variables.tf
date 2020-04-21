@@ -3,24 +3,25 @@
 ##################################################
 variable "aws_region" {
   type    = "string"
-  default = "eu-west-1"
+  default = "eu-west-2"
   description = "The AWS Region"
 }
 
 variable "aws_profile" {
   type    = "string"
-  default = "default"
+  default = "pvz-dev"
   description = "The AWS Profile credentials profile"
 }
 
 # Application
 variable "service_name" {
   type    = "string"
+  default = "eb-animocity"
   description = "The application name"
 }
 variable "service_description" {
   type    = "string"
-  default = ""
+  default = "Elastic beanstalk for animocity nodejs server"
   description = "The application description"
 }
 variable "env" {
@@ -37,7 +38,7 @@ variable "eb_solution_stack_name" {
 }
 variable "instance_type" {
   type    = "string"
-  default = "t3.small"
+  default = "t2.micro"
   description = "The EC2 instance type"
 }
 variable "instance_volume_type" {
@@ -64,12 +65,12 @@ variable "instance_volume_iops" {
 }
 variable "ssh_key_name" {
   type    = "string"
-  default = "Ireland_VPC"
+  default = "animocity-ec2"
   description = "The EC2 SSH KeyPair Name"
 }
 variable "public_ip" {
   type = "string"
-  default = "false"
+  default = "true"
   description = "EC2 instances must have a public ip (true | false)"
 }
 variable "min_instance" {
@@ -90,8 +91,9 @@ variable "deployment_policy" {
 }
 variable "environmentType" {
   type    = "string"
-  default = "LoadBalanced"
+  default = "SingleInstance"
   description = "Set to SingleInstance to launch one EC2 instance with no load balancer."
+#   description = "Set to LoadBalanced to launch load balancer."
 }
 
 # Load Balancing
@@ -102,7 +104,7 @@ variable "loadBalancerType" {
 }
 variable "port" {
   type    = "string"
-  default = "3000"
+  default = "6095"
   description = "The instance port"
 }
 variable "ssl_certificate_id" {
@@ -112,7 +114,7 @@ variable "ssl_certificate_id" {
 }
 variable "healthcheck_url" {
   type    = "string"
-  default = "HTTP:3000/healthcheck"
+  default = "HTTP:6095/healthcheck"
   description = "The path to which to send health check requests."
 }
 variable "healthcheck_healthy_threshold" {
@@ -218,12 +220,12 @@ variable "as_upper_threshold" {
 # https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-specific.html#command-options-nodejs
 variable "node_cmd" {
   type    = "string"
-  default = ""
+  default = "node src/animocity.js"
   description = "Command used to start the Node.js application."
 }
 variable "node_version" {
   type    = "string"
-  default = "10.15.1"
+  default = "12.16.2"
   description = "Version of Node.js."
 }
 variable "proxy_server" {
@@ -231,7 +233,6 @@ variable "proxy_server" {
   default = "none"
   description = "Specifies which web server should be used to proxy connections to Node.js."
 }
-
 variable "xray_enable" {
   type    = "string"
   default = "true"
