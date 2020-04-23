@@ -1,15 +1,13 @@
 ##################################################
-## AWS config
+## AWS
 ##################################################
 provider "aws" {
-  profile = "pvz-dev"
-  region                 = var.aws_region
-  version                = "~> 2.58"
-  skip_region_validation = true
+  region  = var.aws_region
+  version = "~> 2.58"
 }
 
 ##################################################
-## Elastic Beanstalk config
+## Elastic Beanstalk
 ##################################################
 resource "aws_elastic_beanstalk_application" "eb_app" {
   name        = var.service_name
@@ -23,7 +21,7 @@ module "app" {
   # Application settings
   service_name        = var.service_name
   service_description = var.service_description
-  env                 = "dev"
+  env                 = var.env
 
   # Instance settings
   instance_type = "t2.micro"
@@ -42,14 +40,27 @@ module "app" {
 }
 
 ##################################################
-## Route53 config
+## CloudFront
+##################################################
+module "app_cdn" {
+  source = ".//cloudfront"
+
+  service_name       = var.service_name
+  env                = var.env
+  origin_domain_name = module.app.eb_cname
+  domain_name        = var.domain_name
+}
+
+##################################################
+## Route53
 ##################################################
 module "app_dns" {
   source     = ".//r53-alias"
   aws_region = var.aws_region
 
-  domain      = "example.io"
-  domain_name = "app-test.example.io"
-  eb_cname    = module.app.eb_cname
+  domain             = "example.io"
+  domain_name        = var.domain_name
+  eb_cname           = module.app_cdn.cf_cname
+  eb_route53_zone_id = module.app_cdn.cf_hosted_zone_id
 }
 

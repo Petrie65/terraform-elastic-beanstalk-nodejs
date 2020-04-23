@@ -2,16 +2,18 @@
 ## Your variables
 ##################################################
 variable "aws_region" {
-  type        = "string"
+  type        = string
   description = "The AWS Region"
-  default     = "eu-west-2"
+  default     = "af-south-1"
 }
+
 variable "service_name" {
-  type    = "string"
+  type    = string
   default = "animocity-server"
 }
+
 variable "service_description" {
-  type    = "string"
+  type    = string
   default = "My awesome nodeJs App"
 }
 
@@ -19,10 +21,12 @@ variable "service_description" {
 ## Cloudfront
 ##################################################
 variable "env" {
-  type    = "string"
+  type    = string
   default = "dev"
 }
+
 variable "domain_name" {
-  type    = "string"
+  type    = string
   default = "pvz.ninja"
 }
+
